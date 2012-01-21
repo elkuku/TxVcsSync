@@ -1,13 +1,11 @@
 <?php defined('_JEXEC') || die('=;)');
 /**
- * @package    PhoneBook
+ * @package    TxVcsSync
  * @subpackage Views
  * @author     Nikolai Plath - elkuku
  * @author     Created on 17-Jul-2011
  * @license    GNU/GPL
  */
-
-//var_dump($this->project);
 ?>
 
 <div class="TxVcsSync">

@@ -1,15 +1,14 @@
-<?php
+<?php defined('_JEXEC') || die('=;)');
 /**
- * Created by JetBrains PhpStorm.
- * User: elkuku
- * Date: 20.01.12
- * Time: 23:30
- * To change this template use File | Settings | File Templates.
+ * @package    TxVcsSync
+ * @subpackage Views
+ * @author     Nikolai Plath - elkuku
+ * @author     Created on 17-Jul-2011
+ * @license    GNU/GPL
  */
 
 require JPATH_BASE.'/html/DifferenceEngine.php';
 
-//var_dump($this->result);
 $lang = 'de-DE';//@TODO lang selector..
 
 $result = $this->result[$lang];

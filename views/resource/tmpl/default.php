@@ -1,14 +1,13 @@
 <?php defined('_JEXEC') || die('=;)');
 /**
- * Created by JetBrains PhpStorm.
- * User: elkuku
- * Date: 30.12.11
- * Time: 21:03
- * To change this template use File | Settings | File Templates.
+ * @package    TxVcsSync
+ * @subpackage Views
+ * @author     Nikolai Plath - elkuku
+ * @author     Created on 17-Jul-2011
+ * @license    GNU/GPL
  */
 
 //@todo JForm ¿
-//var_dump($this->item);
 ?>
 
 <h2><?= ($this->item->id_resource) ? 'Edit Resource' : 'New Resource' ?></h2>

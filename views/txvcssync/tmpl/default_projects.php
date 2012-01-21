@@ -1,6 +1,6 @@
 <?php defined('_JEXEC') || die('=;)');
 /**
- * @package    PhoneBook
+ * @package    TxVcsSync
  * @subpackage Views
  * @author     Nikolai Plath - elkuku
  * @author     Created on 17-Jul-2011

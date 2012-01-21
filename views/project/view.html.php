@@ -1,6 +1,6 @@
 <?php defined('_JEXEC') || die('=;)');
 /**
- * @package    L0gVi3w
+ * @package    TxVcsSync
  * @subpackage Views
  * @author     Nikolai Plath - elkuku
  * @author     Created on 17-Jul-2011
@@ -11,9 +11,9 @@
 jimport('joomla.application.component.view');
 
 /**
- * HTML View class for the L0gVi3w Component.
+ * HTML View class for the TxVcsSync Component.
  *
- * @package L0gVi3w
+ * @package TxVcsSync
  */
 class TxVcsSyncViewProject extends JView
 {

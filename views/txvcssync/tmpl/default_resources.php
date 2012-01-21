@@ -1,13 +1,12 @@
-<?php
+<?php defined('_JEXEC') || die('=;)');
 /**
- * Created by JetBrains PhpStorm.
- * User: elkuku
- * Date: 20.01.12
- * Time: 17:26
- * To change this template use File | Settings | File Templates.
+ * @package    TxVcsSync
+ * @subpackage Views
+ * @author     Nikolai Plath - elkuku
+ * @author     Created on 17-Jul-2011
+ * @license    GNU/GPL
  */
 
-//var_dump($this->resources);
 $i = 0;
 ?>
 
