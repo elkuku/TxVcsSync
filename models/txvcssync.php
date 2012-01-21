@@ -46,9 +46,10 @@ class TxVcsSyncModelTxVcsSync extends JModelList
         $resource = JModel::getInstance('Resource', 'TxVcsSyncModel')
             ->getItem();
 
-        if( ! isset($resource->id)
+        if(!isset($resource->id)
             || is_null($resource->id)
-            || ! $resource->filename)
+            || !$resource->filename
+        )
             return array();
 
         $langs = explode(',', $project->languages);
@@ -57,44 +58,61 @@ class TxVcsSyncModelTxVcsSync extends JModelList
 
         foreach($langs as $lang)
         {
-        $pathVcs = JPATH_BASE.'/'.$project->vcs_path.'/'.$resource->vcs_rel_path.'/'.$resource->filename;
-        $pathTx = JPATH_BASE.'/'.$project->tx_path.'/'.$resource->tx_rel_path.'/'.$resource->filename;
+            $pathVcs = JPATH_BASE.'/'.$project->vcs_path.'/'.$resource->vcs_rel_path.'/'.$resource->filename;
+            $pathTx = JPATH_BASE.'/'.$project->tx_path.'/'.$resource->tx_rel_path.'/'.$resource->filename;
 
-        $pathVcs = str_replace('[lang]', $lang, $pathVcs);
-        $pathTx = str_replace('[lang]', $lang, $pathTx);
+            $pathVcs = str_replace('[lang]', $lang, $pathVcs);
+            $pathTx = str_replace('[lang]', $lang, $pathTx);
 
-        $originals =(file_exists($pathVcs)) ? parse_ini_file($pathVcs) : array();
-        $translations =(file_exists($pathTx)) ? parse_ini_file($pathTx) : array();
+            $originals = (file_exists($pathVcs)) ? parse_ini_file($pathVcs) : array();
+            $translations = (file_exists($pathTx)) ? parse_ini_file($pathTx) : array();
 
-        $strings = array();
+            $strings = array();
 
-        foreach($translations as $key => $tValue)
-        {
-            $r = new stdClass;
-            $r->key = $key;
-            $r->txValue = $tValue;
-            $r->vcsValue = '';
-
-            if(array_key_exists($key, $originals))
+            foreach($translations as $key => $value)
             {
-                $r->vcsValue = $originals[$key];
-                $r->status = ($r->txValue == $r->vcsValue) ? 0 : 1;
+                $r = new stdClass;
+                $r->key = $key;
+                $r->txValue = $value;
+                $r->vcsValue = '';
 
+                if(array_key_exists($key, $originals))
+                {
+                    $r->vcsValue = $originals[$key];
+                    $r->status = ($r->txValue == $r->vcsValue) ? 0 : 1;
+
+                }
+                else
+                {
+                    $r->status = 2;
+                }
+
+                $strings[] = $r;
             }
-            else
+
+            /*
+            * Back check the VCS version - just in case..
+            */
+            foreach($originals as $key => $value)
             {
-                $r->status = 2;
+                if(array_key_exists($key, $translations))
+                    continue;
+
+                $r = new stdClass;
+                $r->key = $key;
+                $r->txValue = '';
+                $r->vcsValue = $value;
+                $r->status = 3;
+
+                $strings[] = $r;
             }
 
-            $strings[] = $r;
-        }
+            $result = new stdClass;
+            $result->filename = str_replace('[lang]', $lang, $resource->filename);
+            $result->pathVcs = $pathVcs;
+            $result->pathTx = $pathTx;
 
-        $result = new stdClass;
-        $result->filename = str_replace('[lang]', $lang, $resource->filename);
-        $result->pathVcs = $pathVcs;
-        $result->pathTx = $pathTx;
-
-        $result->strings = $strings;
+            $result->strings = $strings;
 
             $results[$lang] = $result;
         }

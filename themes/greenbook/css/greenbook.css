@@ -116,6 +116,10 @@ table.diff td.diff-addedline strong,table.diff td.diff-deletedline strong
     color: red;
 }
 
+table.diff td.notFound {
+    background-color: #ffe5b2;
+}
+
 h3.identical {
     text-align: center;
     color: #006400;
