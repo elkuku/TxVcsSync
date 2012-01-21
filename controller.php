@@ -1,6 +1,6 @@
 <?php defined('_JEXEC') || die('=;)');
 /**
- * @package    Phonebook
+ * @package    TxVcsSync
  * @subpackage Base
  * @author     Nikolai Plath - elkuku
  * @author     Created on 17-Jul-2011
@@ -10,7 +10,7 @@
 jimport('joomla.application.component.controller');
 
 /**
- * L0gVi3w Controller.
+ * TxVcsSync Controller.
  *
  * @package    TxVcsSync
  * @subpackage Controllers
