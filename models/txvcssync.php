@@ -43,81 +43,70 @@ class TxVcsSyncModelTxVcsSync extends JModelList
     public function getResult()
     {
         $project = $this->getProject();
+
+        $langs = explode(',', $project->languages);
+        $lang = JRequest::getCmd('lang', 'de-DE');
+
+        $lang = (in_array($lang, $langs)) ? $lang : 'de-DE';
+
         $resource = JModel::getInstance('Resource', 'TxVcsSyncModel')
             ->getItem();
 
-        if(!isset($resource->id)
-            || is_null($resource->id)
-            || !$resource->filename
-        )
+        if( ! isset($resource->id) || is_null($resource->id) || ! $resource->filename)
             return array();
 
-        $langs = explode(',', $project->languages);
+        $vcsFile = TxVcsHelper::readFile($project, $resource, $lang, 'vcs');
+        $txFile = TxVcsHelper::readFile($project, $resource, $lang, 'tx');
 
-        $results = array();
+        $strings = array();
 
-        foreach($langs as $lang)
+        foreach($txFile->strings as $key => $value)
         {
-            $pathVcs = JPATH_BASE.'/'.$project->vcs_path.'/'.$resource->vcs_rel_path.'/'.$resource->filename;
-            $pathTx = JPATH_BASE.'/'.$project->tx_path.'/'.$resource->tx_rel_path.'/'.$resource->filename;
+            $r = new stdClass;
+            $r->key = $key;
+            $r->txValue = $value;
+            $r->vcsValue = '';
 
-            $pathVcs = str_replace('[lang]', $lang, $pathVcs);
-            $pathTx = str_replace('[lang]', $lang, $pathTx);
-
-            $originals = (file_exists($pathVcs)) ? parse_ini_file($pathVcs) : array();
-            $translations = (file_exists($pathTx)) ? parse_ini_file($pathTx) : array();
-
-            $strings = array();
-
-            foreach($translations as $key => $value)
+            if(array_key_exists($key, $vcsFile->strings))
             {
-                $r = new stdClass;
-                $r->key = $key;
-                $r->txValue = $value;
-                $r->vcsValue = '';
-
-                if(array_key_exists($key, $originals))
-                {
-                    $r->vcsValue = $originals[$key];
-                    $r->status = ($r->txValue == $r->vcsValue) ? 0 : 1;
-
-                }
-                else
-                {
-                    $r->status = 2;
-                }
-
-                $strings[] = $r;
+                $r->vcsValue = $vcsFile->strings[$key];
+                $r->status = ($r->txValue == $r->vcsValue) ? 0 : 1;
+            }
+            else
+            {
+                $r->status = 2;
             }
 
-            /*
-            * Back check the VCS version - just in case..
-            */
-            foreach($originals as $key => $value)
-            {
-                if(array_key_exists($key, $translations))
-                    continue;
-
-                $r = new stdClass;
-                $r->key = $key;
-                $r->txValue = '';
-                $r->vcsValue = $value;
-                $r->status = 3;
-
-                $strings[] = $r;
-            }
-
-            $result = new stdClass;
-            $result->filename = str_replace('[lang]', $lang, $resource->filename);
-            $result->pathVcs = $pathVcs;
-            $result->pathTx = $pathTx;
-
-            $result->strings = $strings;
-
-            $results[$lang] = $result;
+            $strings[] = $r;
         }
 
-        return $results;
+        /*
+        * Back check the VCS version - just in case..
+        */
+        foreach($vcsFile->strings as $key => $value)
+        {
+            if(array_key_exists($key, $txFile->strings))
+                continue;
+
+            $r = new stdClass;
+            $r->key = $key;
+            $r->txValue = '';
+            $r->vcsValue = $value;
+            $r->status = 3;
+
+            $strings[] = $r;
+        }
+
+        $result = new stdClass;
+        $result->id_resource = $resource->id;
+        $result->lang = $lang;
+        $result->filename = str_replace('[lang]', $lang, $resource->filename);
+        $result->pathVcs = $vcsFile->path;
+        $result->pathTx = $txFile->path;
+
+        $result->strings = $strings;
+
+        return $result;
     }
 
 }//class

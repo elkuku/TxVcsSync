@@ -14,7 +14,7 @@
 
     </head>
     <body>
-        <h1><?= JFactory::getConfig()->get('appName') ?></h1>
+        <h1><a href="index.php"><?= JFactory::getConfig()->get('appName') ?></a></h1>
 
         <jdoc:include type="message" />
         <jdoc:include type="component" name="main" />

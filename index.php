@@ -58,7 +58,9 @@ class TxVcsSync extends JApplicationWeb
         //-- Set up the database
         $this->setUpDB();
 
-        JHtml::addIncludePath(JPATH_COMPONENT.'/html');
+        JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+
+        require JPATH_COMPONENT.'/helpers/txvcs.php';
 
         //-- We provide also a special table class
         JLoader::register('TxVcsTable', JPATH_COMPONENT.'/tables/table.php');

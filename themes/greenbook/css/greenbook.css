@@ -11,9 +11,11 @@ body {
     background-color: #9acd32;
 }
 
-h1 {
+h1, h1 a {
     color: #665555;
+    text-decoration: none;
 }
+
 
 table {
     width: 100%;
@@ -26,6 +28,7 @@ table {
 
 th {
     background-color: #eee;
+    border-bottom: 2px solid silver;
 }
 
 tr.row0 {
@@ -98,12 +101,18 @@ p.selectProject {
 /*
  * Diff
  */
+table.diff {
+    border-collapse: collapse;
+    border: 2px solid silver;
+}
 td.diff-addedline {
     background-color: #ffffbb;
+    border-right: 2px solid silver;
 }
 
 td.diff-deletedline {
     background-color: #ddffdd;
+    border-left: 2px solid silver;
 }
 
 table.diff td {
@@ -120,7 +129,19 @@ table.diff td.notFound {
     background-color: #ffe5b2;
 }
 
+table.diff td.diffCommands {
+    text-align: center;
+    border: 2px solid silver;
+    border-top: 0;
+}
+
+
 h3.identical {
     text-align: center;
     color: #006400;
+}
+
+label:hover {
+    cursor: pointer;
+    background-color: #ffc;
 }

@@ -7,67 +7,54 @@
  * @license    GNU/GPL
  */
 
-require JPATH_BASE.'/html/DifferenceEngine.php';
+require JPATH_BASE.'/helpers/DifferenceEngine.php';
 
-$lang = 'de-DE';//@TODO lang selector..
+$result = $this->result;
+
+$lang = $result->lang;//  'de-DE';//@TODO lang selector..
 
 $showAll = true;
 $showAll = false;
 
-$result = $this->result[$lang];
 $differences = 0;
 ?>
 <h4><?= $result->filename ?></h4>
+    <form action="index.php" method="post">
+
 <table class="diff">
     <tr>
-        <th colspan="2">Transifex</th>
-        <th colspan="2">VCS</th>
+        <th style="width: 50%;">Transifex</th>
+        <th style="width: 50%;">VCS</th>
     </tr>
     <?php
     foreach($result->strings as $string) :
-        //var_dump($result);
         switch($string->status) :
             case 0 :
                 //-- Equal strings
                 if($showAll) : ?>
                     <tr>
-                        <td colspan="2"><?= htmlspecialchars($string->txValue) ?></td>
-                        <td colspan="2"><?= htmlspecialchars($string->vcsValue) ?></td>
+                        <td><?= htmlspecialchars($string->txValue) ?></td>
+                        <td><?= htmlspecialchars($string->vcsValue) ?></td>
                     </tr>
 <?php
-                    $differences ++;
 
                 endif;
                 continue;
                 break;
             case 1 :
                 //-- Translation change
-                $dwFormatter = new TableDiffFormatter;
-                $dwDiff = new Diff(
-                    array(htmlspecialchars($string->txValue))
-                    , array(htmlspecialchars($string->vcsValue)));
-                echo $dwFormatter->format($dwDiff);
-
+                echo JHtml::_('TxVcs.DiffRow', $string->key, $string->txValue, $string->vcsValue);
                 $differences ++;
-
                 break;
             case 2:
                 //-- Not found in VCS
-                ?>
-                <tr>
-                        <td colspan="2"><?= htmlspecialchars($string->txValue) ?></td>
-                        <td colspan="2" class="notFound"><?= htmlspecialchars($string->vcsValue) ?></td>
-                    </tr>
-                    <?php
+                echo JHtml::_('TxVcs.displayRow', $string->key, $string->txValue, $string->vcsValue);
+                $differences ++;
                 break;
             case 3:
                 //-- Not found in Tx
-                ?>
-                    <tr>
-                        <td colspan="2" class="notFound"><?= htmlspecialchars($string->txValue) ?></td>
-                        <td colspan="2"><?= htmlspecialchars($string->vcsValue) ?></td>
-                    </tr>
-                    <?php
+                echo JHtml::_('TxVcs.displayRow', $string->key, $string->txValue, $string->vcsValue);
+                $differences ++;
                 break;
             default :
                 echo 'unknown status';
@@ -79,6 +66,13 @@ $differences = 0;
     ?>
 
 </table>
+        <?php //var_dump($this->result); ?>
+        <input type="hidden" name="task" value="resource.update">
+        <input type="hidden" name="id_project" value="<?= $this->project->id ?>">
+        <input type="hidden" name="id_resource" value="<?= $this->result->id_resource ?>">
+        <input type="hidden" name="lang" value="<?= $lang ?>">
+<input type="submit" value="Submit" />
+    </form>
 
 <?php if(0 == $differences) : ?>
     <h3 class="identical">The files are identical</h3>
