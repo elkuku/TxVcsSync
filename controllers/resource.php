@@ -1,7 +1,7 @@
 <?php defined('_JEXEC') || die('=;)');
 /**
- * @package    Phonebook
- * @subpackage Base
+ * @package    TxVcsSync
+ * @subpackage Controllers
  * @author     Nikolai Plath - elkuku
  * @author     Created on 17-Jul-2011
  * @license    GNU/GPL
@@ -10,7 +10,7 @@
 jimport('joomla.application.component.controller');
 
 /**
- * L0gVi3w Controller.
+ * TxVcsSync Controller.
  *
  * @package    TxVcsSync
  * @subpackage Controllers
@@ -30,7 +30,7 @@ class TxVcsSyncControllerResource extends JController
         $data['id_resource'] = $input->get('id_resource', null, 'int');
         $data['id_project'] = $input->get('id_project', null, 'int');
         $data['language'] = $input->get('language', '', 'html');
-        $data['filename']  = $input->get('filename', '', 'html');
+        $data['filename'] = $input->get('filename', '', 'html');
         $data['tx_rel_path'] = $input->get('tx_rel_path', '', 'html');
         $data['vcs_rel_path'] = $input->get('vcs_rel_path', '', 'html');
 
@@ -112,24 +112,20 @@ class TxVcsSyncControllerResource extends JController
             {
                 case 'tx' :
                     $vcsFile->strings[$key] = $txFile->strings[$key];
-                    if(array_key_exists($key, $vcsFile->strings))
-                        {
-                    }
-                    else
-                    {
-
-                    }
                     break;
 
                 case 'vcs' :
                     $txFile->strings[$key] = $vcsFile->strings[$key];
+                    break;
             }
         }
 
         TxVcsHelper::writeFile($txFile);
         TxVcsHelper::writeFile($vcsFile);
 
-        var_dump($_REQUEST);
+        JFactory::getApplication()->enqueueMessage('The translation files have been updated.');
+
+//        var_dump($_REQUEST);
 
         parent::display();
     }
